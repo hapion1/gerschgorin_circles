@@ -1,8 +1,9 @@
 from typing import List
+from copy import deepcopy
 
 
 class Matrix:
-    def __init__(self, data: List[List[int | float | complex]]):
+    def __init__(self, data: List[List[int | float | complex]]) -> None:
         self.zeilen = len(data)         # Anzahl Zeilen
         self.spalten = len(data[0])     # Anzahl Spalten
         self.data = data                # Werte[Zeile][Spalte]
@@ -18,18 +19,61 @@ class Matrix:
             except IndexError:
                 break
 
-    def __repr__(self):
+    def __add__(self, other):
+        """ Matrixaddition. Matrizen müssen dieselben Dimensionen haben"""
+        if not self.zeilen == other.zeilen or not self.spalten == other.spalten:
+            raise ValueError(f"Matrizen müssen dieselben Dimensionen haben")
+
+        matrix = deepcopy(self)  # NOQA
+        for i in range(self.zeilen):
+            for j in range(self.spalten):
+                matrix.data[i][j] += other.data[i][j]
+
+        return matrix
+
+    def __sub__(self, other):
+        """ Matrixsubtraktion. Matrizen müssen dieselben Dimensionen machen """
+        if not self.zeilen == other.zeilen or not self.spalten == other.spalten:
+            raise ValueError(f"Matrizen müssen dieselben Dimensionen haben")
+
+        matrix = deepcopy(self)  # NOQA
+        for i in range(self.zeilen):
+            for j in range(self.spalten):
+                matrix.data[i][j] -= other.data[i][j]
+
+        return matrix
+
+    def __mul__(self, other):
+        pass
+
+    def __repr__(self) -> str:
         return str(self.data)
 
-    def quadratic(self):
+    def det(self) -> int | float | complex:
+        pass
+
+    def quadratic(self) -> bool:
         return self.zeilen == self.spalten
 
 
 if __name__ == "__main__":
-    werte = [
+
+    werte1 = [
+        [2, 1, 0.5],
+        [0.2, 5, 0.7],
+        [1, 0, 6]
+    ]
+
+    werte2 = [
         [1, 2, 3],
         [4, 5, 6],
         [7, 8, 9]
     ]
-    matrix = Matrix(werte)
-    print(matrix)
+
+    matrix1 = Matrix(werte1)
+    matrix2 = Matrix(werte2)
+
+    add = matrix1 + matrix2
+    sub = matrix1 - matrix2
+
+    print(matrix1)
