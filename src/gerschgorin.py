@@ -1,6 +1,6 @@
 from typing import List, Tuple
 import matplotlib.pyplot as plt
-from matrix import Matrix
+from .matrix import Matrix
 import os
 
 
@@ -29,7 +29,6 @@ class GerschgorinKreis:
                 a_ij = self.matrix.data[i][j]
                 radius += abs(a_ij)
             radii.append(radius)
-
         return radii
 
     def plot(self, eigenvalues=False) -> None:
@@ -43,7 +42,7 @@ class GerschgorinKreis:
         ax.axis("equal")
         ax.set_xlabel("Re(z)", loc="right", **font)
         ax.set_ylabel("Im(z)", loc="top", **font)
-        ax.set_title(f"Gerschgorin Kreise zur Matrix {self.matrix}", **font)
+        ax.set_title(f"Gerschgorin Circles for Matrix {self.matrix.data}", **font)
 
         # set the x-spine
         ax.spines['left'].set_position('zero')
@@ -72,22 +71,26 @@ class GerschgorinKreis:
             ax.plot(
                 center_coordinates[0], center_coordinates[1], "x", markersize=4, label="Crosses", color=self.colors[i]
             )
-        min_x: int | float | complex = min(cords, key=lambda x: x[0])[0]
-        max_x: int | float | complex = max(cords, key=lambda x: x[0])[0]
+        min_x = min(cords, key=lambda x: x[0])[0]
+        max_x = max(cords, key=lambda x: x[0])[0]
+
+        if isinstance(min_x, complex) or isinstance(max_x, complex):
+            min_x = min_x.real
+            max_x = max_x.real
+
         ax.set_xlim(min_x - 2, max_x + 2)
         ax.set_ylim((-2 * max_radius, 2 * max_radius))
 
         if eigenvalues:
             eigenvalues = self.matrix.eigenvalues()[0]
             for eig in eigenvalues:
-                if not isinstance(eig, complex):
-                    ax.plot(eig, 0, "o", markersize=4, label="Dots", color="indigo")
+                if isinstance(eig, complex):
+                    ax.plot(eig.real, eig.imag, "o", markersize=4, label="Dots", color="indigo")
                 else:
-                    # TODO: implement complex handling
-                    raise NotImplementedError(f"Handling of complex numbers not implemented yet")
+                    ax.plot(eig, 0, "o", markersize=4, label="Dots", color="indigo")
 
         plt.show()
-        fig.savefig(os.path.join("plots", f"plot_{self.matrix}.svg"), format="svg", dpi=1200)
+        fig.savefig(os.path.join("../plots", f"plot_{self.matrix}.svg"), format="svg", dpi=1200)
 
 
 if __name__ == "__main__":
