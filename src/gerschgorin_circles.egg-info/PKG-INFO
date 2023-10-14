@@ -1,9 +1,0 @@
-Metadata-Version: 2.1
-Name: gerschgorin-circles
-Version: 0.1.0
-Summary: Simple Python implementation of Gerschgorin Circles to estimate Eigenvalues. Can also calculateEigenvalues and Eigenvectors.
-Author: Jan Piontek
-Author-email: jan-piontek@outlook.de
-License: MIT
-Requires: matplotlib
-Requires: numpy

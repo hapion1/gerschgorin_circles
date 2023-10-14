@@ -90,7 +90,7 @@ class GerschgorinKreis:
                     ax.plot(eig, 0, "o", markersize=4, label="Dots", color="indigo")
 
         plt.show()
-        fig.savefig(os.path.join("../plots", f"plot_{self.matrix}.svg"), format="svg", dpi=1200)
+        fig.savefig(os.path.join("../../plots", f"plot_{self.matrix}.svg"), format="svg", dpi=1200)
 
 
 if __name__ == "__main__":

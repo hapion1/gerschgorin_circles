@@ -1,5 +1,0 @@
-setup.py
-gerschgorin_circles.egg-info/PKG-INFO
-gerschgorin_circles.egg-info/SOURCES.txt
-gerschgorin_circles.egg-info/dependency_links.txt
-gerschgorin_circles.egg-info/top_level.txt
