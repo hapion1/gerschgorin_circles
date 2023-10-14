@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 import matplotlib.pyplot as plt
 from matrix import Matrix
 import os
@@ -32,11 +32,11 @@ class GerschgorinKreis:
 
         return radii
 
-    def plot(self):
+    def plot(self, eigenvalues=False) -> None:
         """ Plottet Gerschgorin Kreise """
         if self.radii is None:
             raise ValueError(f"Radien müssen berechnet sein bevor plot() gerufen wird")
-        max_radius = max(self.radii)
+        max_radius: int | float = max(self.radii)
 
         fig, ax = plt.subplots()
         font = {'fontname': 'Helvetica'}
@@ -59,19 +59,33 @@ class GerschgorinKreis:
         ax.spines['top'].set_color('none')
         ax.xaxis.tick_bottom()
 
-        cords = []
+        # arrows at the end of axes
+        ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(), clip_on=False)
+        ax.plot(0, 1, "^k", transform=ax.get_xaxis_transform(), clip_on=False)
+
+        cords: List[Tuple[int | float | complex, int]] = []
         for i, radius in enumerate(self.radii):
-            center_coordinates = (self.matrix.data[i][i], 0)
+            center_coordinates: Tuple[int | float | complex, int] = (self.matrix.data[i][i], 0)
             cords.append(center_coordinates)
             circle = plt.Circle(xy=center_coordinates, radius=radius, fill=False, color=self.colors[i])
             ax.add_patch(circle)
             ax.plot(
-                center_coordinates[0], center_coordinates[1], 'x', markersize=4, label='Crosses', color=self.colors[i]
+                center_coordinates[0], center_coordinates[1], "x", markersize=4, label="Crosses", color=self.colors[i]
             )
-        min_x = min(cords, key=lambda x: x[0])[0]
-        max_x = max(cords, key=lambda x: x[0])[0]
+        min_x: int | float | complex = min(cords, key=lambda x: x[0])[0]
+        max_x: int | float | complex = max(cords, key=lambda x: x[0])[0]
         ax.set_xlim(min_x - 2, max_x + 2)
         ax.set_ylim((-2 * max_radius, 2 * max_radius))
+
+        if eigenvalues:
+            eigenvalues = self.matrix.eigenvalues()[0]
+            for eig in eigenvalues:
+                if not isinstance(eig, complex):
+                    ax.plot(eig, 0, "o", markersize=4, label="Dots", color="indigo")
+                else:
+                    # TODO: implement complex handling
+                    raise NotImplementedError(f"Handling of complex numbers not implemented yet")
+
         plt.show()
         fig.savefig(os.path.join("plots", f"plot_{self.matrix}.svg"), format="svg", dpi=1200)
 
@@ -92,4 +106,5 @@ if __name__ == "__main__":
 
     m = Matrix(werte)
     g = GerschgorinKreis(m)
-    g.plot()
+    # g.plot()
+    g.plot(eigenvalues=True)

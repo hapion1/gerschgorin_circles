@@ -1,12 +1,17 @@
 from typing import List
 from copy import deepcopy
+import numpy as np
 
 
+# TODO: change Matrix data List implementation to np.array
 class Matrix:
     def __init__(self, data: List[List[int | float | complex]]) -> None:
         self.zeilen = len(data)         # Anzahl Zeilen
         self.spalten = len(data[0])     # Anzahl Spalten
         self.data = data                # Werte[Zeile][Spalte]
+        self.determinant = None
+        self.eigenwerte = None
+        self.eigenvectors = None
         i = 1
         while True:
             try:
@@ -50,14 +55,35 @@ class Matrix:
         return str(self.data)
 
     def det(self) -> int | float | complex:
-        pass
+        if not self.quadratic():
+            raise ValueError(f"Matrix must be quadratic to compute determinant")
+        array = np.array(self.data)
+        determinant = np.linalg.det(array)
+        self.determinant = determinant
+        return determinant
 
     def quadratic(self) -> bool:
         return self.zeilen == self.spalten
 
+    def eigenvalues(self):
+        """
+        Eigenvector corresponding to eigenvalues[i] := eigenvectors[:,i]
+        :return: Eigenvalues, Eigenvectors
+        """
+        if not self.quadratic():
+            raise ValueError(f"Matrix must be quadratic to compute Eigenvalues")
+
+        if self.eigenwerte and self.eigenvectors:
+            return self.eigenvalues, self.eigenvectors
+
+        array = np.array(self.data)
+        eigenvalues, eigenvectors = np.linalg.eig(array)
+        self.eigenwerte = eigenvalues
+        self.eigenvectors = eigenvectors
+        return eigenvalues, eigenvectors
+
 
 if __name__ == "__main__":
-
     werte1 = [
         [2, 1, 0.5],
         [0.2, 5, 0.7],
@@ -75,5 +101,10 @@ if __name__ == "__main__":
 
     add = matrix1 + matrix2
     sub = matrix1 - matrix2
+
+    eig = matrix2.eigenvalues()
+
+    det1 = matrix1.det()
+    det2 = matrix2.det()
 
     print(matrix1)
