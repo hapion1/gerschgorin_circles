@@ -1,4 +1,5 @@
 from typing import List
+
 import numpy as np
 
 
@@ -8,7 +9,7 @@ class Matrix:
         self.spalten = len(data[0])  # Anzahl Spalten
         self.data = np.array(data)  # Werte[Zeile][Spalte]
         self.determinant = None
-        self.eigenwerte = None
+        self.eigenvalues = None
         self.eigenvectors = None
         i = 1
         while True:
@@ -38,6 +39,14 @@ class Matrix:
         matrix = self.data - other.data
         return matrix
 
+    def __mul__(self, other):
+        """ Matrix multiplication """
+        if not self.spalten == other.zeilen:
+            raise ValueError(f"Last dimension of matrix1 must equal first dimension of matrix2")
+
+        matrix = np.matmul(self.data, other.data)
+        return matrix
+
     def __repr__(self) -> str:
         return "\n"+str(self.data)
 
@@ -52,7 +61,7 @@ class Matrix:
     def quadratic(self) -> bool:
         return self.zeilen == self.spalten
 
-    def eigenvalues(self):
+    def eig(self):
         """
         Eigenvector corresponding to eigenvalues[i] := eigenvectors[:,i]
         :return: Eigenvalues, Eigenvectors
@@ -60,18 +69,18 @@ class Matrix:
         if not self.quadratic():
             raise ValueError(f"Matrix must be quadratic to compute Eigenvalues")
 
-        if self.eigenwerte and self.eigenvectors:
+        if self.eigenvalues and self.eigenvectors:
             return self.eigenvalues, self.eigenvectors
 
         array = self.data
         eigenvalues, eigenvectors = np.linalg.eig(array)
-        self.eigenwerte = eigenvalues
+        self.eigenvalues = eigenvalues
         self.eigenvectors = eigenvectors
         return eigenvalues, eigenvectors
 
 
 if __name__ == "__main__":
-    werte1 = [
+    werte1 = [  # NOQA
         [2, 1, 0.5],
         [0.2, 5, 0.7],
         [1, 0, 6]
@@ -83,15 +92,24 @@ if __name__ == "__main__":
         [7, 8, 9]
     ]
 
+    werte3 = [
+        [complex("1+1j"), complex("0-1j"), complex("0-0j")],
+        [complex("-5-2j"), complex("0-0j"), complex("0-0j")],
+        [complex("0-0j"), complex("0-0j"), complex("-1-1j")]
+    ]
+
     matrix1 = Matrix(werte1)
     matrix2 = Matrix(werte2)
+    matrix3 = Matrix(werte3)
 
     add = matrix1 + matrix2
     sub = matrix1 - matrix2
 
-    eig = matrix2.eigenvalues()
+    eigen = matrix3.eig()
 
     det1 = matrix1.det()
     det2 = matrix2.det()
+    det3 = matrix3.det()
+    print(f"{det3:.1f}")
 
-    print(matrix1)
+    print(matrix3)
