@@ -1,0 +1,9 @@
+README.md
+setup.py
+src/gerschgorin_circles/__init__.py
+src/gerschgorin_circles/gerschgorin.py
+src/gerschgorin_circles/matrix.py
+src/gerschgorin_circles.egg-info/PKG-INFO
+src/gerschgorin_circles.egg-info/SOURCES.txt
+src/gerschgorin_circles.egg-info/dependency_links.txt
+src/gerschgorin_circles.egg-info/top_level.txt
