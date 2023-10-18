@@ -4,6 +4,14 @@ Python implementation of Gerschgorin Circles theorem to estimate Eigenvalues.
 For reference see [Gerschgorin Circle Theorem](https://en.wikipedia.org/wiki/Gershgorin_circle_theorem).
 Gerschgorin Circles are sometimes called Gerschgorin Discs.
 
+## Installation
+
+From Git:
+
+```
+pip install git+<git.url>
+```
+
 ## Example
 
 The focal utility of this package is the `plot()` method of the `GerschgorinCircle` class.
