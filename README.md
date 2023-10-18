@@ -39,7 +39,7 @@ It is called `gerschgorin_plots`. The resolution of the plots in this directory 
 The directory is in the same `Python working directory` as the script you are running the function in.
 
 ```
-    g.plot(eigenvalues=True, legend=True, save_plot=True)
+g.plot(eigenvalues=True, legend=True, save_plot=True)
 ```
 
 ### Example for 3x3 Matrix with complex numbers
