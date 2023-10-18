@@ -6,7 +6,7 @@ setup(
     license='MIT',
     author='Jan Piontek',
     author_email='jan-piontek@outlook.de',
-    description='Simple Python implementation of Gerschgorin Circles to estimate Eigenvalues. Can also calculate'
+    description='Python implementation of Gerschgorin Circles to estimate Eigenvalues. Can also calculate'
                 'Eigenvalues and Eigenvectors.',
     requires=[
         'matplotlib',
