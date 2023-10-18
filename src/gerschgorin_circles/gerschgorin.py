@@ -7,13 +7,13 @@ import numpy as np
 from .matrix import Matrix
 
 
-class GerschgorinKreis:
+class GerschgorinCircle:
     def __init__(self, matrix: Matrix) -> None:
         self.matrix = matrix
         if not self.matrix.quadratic():
             raise ValueError(f"Matrix must be quadratic, was {self.matrix}")
         self.radii = self.radius()
-        self.colors = ["red", "green", "blue", "violet"]
+        self.colors = ["red", "green", "blue", "violet", "orange", "yellow"]
 
     def radius(self) -> List[int | float]:
         """
@@ -34,7 +34,7 @@ class GerschgorinKreis:
             radii.append(radius)
         return radii
 
-    def plot(self, eigenvalues=False, legend=False) -> None:
+    def plot(self, eigenvalues=False, legend=False, save_plot=False, float_print_precision: int = 1) -> None:
         """ Plots Gerschgorin Circles and optionally eigenvalues """
         if self.radii is None:
             raise ValueError(f"Radien müssen berechnet sein bevor plot() gerufen wird")
@@ -75,38 +75,38 @@ class GerschgorinKreis:
             cords.append(center_coordinates)
             circle = plt.Circle(
                 xy=center_coordinates, radius=radius, fill=False, color=self.colors[i],
-                label=f"S({self.matrix.data[i][i]}, {self.radii[i]})"
+                label=f"S({self.matrix.data[i][i]:.1f}, {self.radii[i]:.1f})"
             )
             ax.add_patch(circle)
             ax.plot(
-                center_coordinates[0], center_coordinates[1], "x", markersize=4, label="Circle Center",
+                center_coordinates[0], center_coordinates[1], "x", markersize=4,  # label="Circle Center",
                 color=self.colors[i]
             )
         min_x = min(cords, key=lambda x: x[0])[0]
         max_x = max(cords, key=lambda x: x[0])[0]
 
-        # Todo: fix scaling for complex numbers
-        if isinstance(min_x, complex) or isinstance(max_x, complex):
-            min_x = min_x.real
-            max_x = max_x.real
-
         ax.set_xlim(min_x - 2, max_x + 2)
         ax.set_ylim((-2 * max_radius, 2 * max_radius))
 
+        np.set_printoptions(precision=float_print_precision)
         if eigenvalues:
             eigenwerte: np.ndarray = self.matrix.eig()[0]
             for eig in eigenwerte:
                 if isinstance(eig, complex):
-                    ax.plot(eig.real, eig.imag, "o", markersize=4, label=f"Eigenvalue {eig:.1f}", color="indigo")
+                    ax.plot(eig.real, eig.imag, "o", markersize=4, color="indigo")
                 else:
-                    ax.plot(eig, 0, "o", markersize=4, label=f"Eigenvalue {eig:.1f}", color="indigo")
+                    ax.plot(eig, 0, "o", markersize=4, color="indigo")
+            ax.plot(0, 0, "", label=f"Eigenvalues: {eigenwerte}", color="indigo")
+
         if legend:
-            plt.legend(loc="lower right")
+            plt.legend(loc="lower center")
         plt.show()
-        dir_path = os.path.join("..", "gerschgorin_plots")
-        ensure_directory(dir_path)
-        plot_path = os.path.join(dir_path, f"plot_{self.matrix}.svg")
-        fig.savefig(plot_path, format="svg", dpi=1200)
+
+        if save_plot:
+            dir_path = os.path.join("gerschgorin_plots")
+            ensure_directory(dir_path)
+            plot_path = os.path.join(dir_path, f"plot_{self.matrix}.svg")
+            fig.savefig(plot_path, format="svg", dpi=1200)
 
 
 def ensure_directory(path: str) -> None:
@@ -130,9 +130,9 @@ if __name__ == "__main__":
     werte3 = [
         [complex("1+1j"), complex("0-1j"), complex("0-0j")],
         [complex("-5-2j"), complex("0-0j"), complex("0-0j")],
-        [complex("0-0j"), complex("0-0j"), complex("-1-1j")]
+        [complex("1-0j"), complex("0-0j"), complex("-1-1j")]
     ]
 
     m = Matrix(werte3)
-    g = GerschgorinKreis(m)
-    g.plot(eigenvalues=True, legend=False)
+    g = GerschgorinCircle(m)
+    g.plot(eigenvalues=True, legend=True, save_plot=True)

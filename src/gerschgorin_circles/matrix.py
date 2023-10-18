@@ -4,10 +4,15 @@ import numpy as np
 
 
 class Matrix:
-    def __init__(self, data: List[List[int | float | complex]]) -> None:
+    def __init__(self, data: List[List[int | float | complex]] | np.ndarray) -> None:
         self.zeilen = len(data)  # Anzahl Zeilen
         self.spalten = len(data[0])  # Anzahl Spalten
-        self.data = np.array(data)  # Werte[Zeile][Spalte]
+        if isinstance(data, list):
+            self.data = np.array(data)  # Werte[Zeile][Spalte]
+        elif isinstance(data, np.ndarray):
+            self.data = data
+        else:
+            raise TypeError(f"Matrix data must either be supplied as list or numpy.ndarray")
         self.determinant = None
         self.eigenvalues = None
         self.eigenvectors = None
@@ -29,7 +34,7 @@ class Matrix:
             raise ValueError(f"Matrices must have equal dimensions")
 
         matrix = self.data + other.data
-        return matrix
+        return Matrix(matrix)
 
     def __sub__(self, other):
         """ Matrix subtraction """
@@ -37,7 +42,7 @@ class Matrix:
             raise ValueError(f"Matrices must have equal dimensions")
 
         matrix = self.data - other.data
-        return matrix
+        return Matrix(matrix)
 
     def __mul__(self, other):
         """ Matrix multiplication """
@@ -45,7 +50,7 @@ class Matrix:
             raise ValueError(f"Last dimension of matrix1 must equal first dimension of matrix2")
 
         matrix = np.matmul(self.data, other.data)
-        return matrix
+        return Matrix(matrix)
 
     def __repr__(self) -> str:
         return "\n"+str(self.data)
