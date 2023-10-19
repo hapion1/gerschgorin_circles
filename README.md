@@ -32,7 +32,7 @@ m = matrix.Matrix(
     ]   
 )
 
-g = gerschgorin.GerschgorinCircle(g)
+g = gerschgorin.GerschgorinCircle(m)
 g.plot(eigenvalues=True, legend=True)
 ```
 
@@ -66,8 +66,8 @@ m = matrix.Matrix(
     ]  
 )
 
-g = gerschgorin.GerschgorinCircle(g)
-g.plot(eigenvalues=True, legend=True)
+g = gerschgorin.GerschgorinCircle(m)
+g.plot(eigenvalues=True, legend=True, save_plot=True)
 ```
 
 Output:
