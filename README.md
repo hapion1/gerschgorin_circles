@@ -9,7 +9,7 @@ Gerschgorin Circles are sometimes called Gerschgorin Discs.
 From Git:
 
 ```
-pip install git+https://github.com/hapion1/gerschgorin_circles/tree/main
+pip install git+https://github.com/hapion1/gerschgorin_circles@main
 ```
 
 Working on adding this Package to PyPI.
